@@ -2,7 +2,7 @@
 
 const request = require('supertest');
 const chai = require('chai');
-const dbHandler = require('../config/db-test');
+const dbHandler = require('../config/db');
 const chaiAsPromised = require('chai-as-promised');
 
 const app = require('../app');

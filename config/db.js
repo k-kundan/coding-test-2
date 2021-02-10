@@ -9,6 +9,7 @@ const connect = () => {
         mongoServer.getUri().then((mongoUri) => {
             const mongooseOpts = {
                 autoReconnect: true,
+                useNewUrlParser: true,
                 reconnectTries: Number.MAX_VALUE,
                 reconnectInterval: 1000
             };

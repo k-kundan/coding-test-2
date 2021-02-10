@@ -3,7 +3,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
 const app = require('../app');
-const dbHandler = require('../config/db-test');
+const dbHandler = require('../config/db');
 const expect = chai.expect;
 
 chai.use(chaiAsPromised);
