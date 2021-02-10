@@ -1,9 +1,18 @@
 const mongoose = require('mongoose');
 
 const PetSchema = new mongoose.Schema({
-    name: mongoose.Schema.Types.String,
-    age: mongoose.Schema.Types.Number,
-    colour: mongoose.Schema.Types.String,
+    name: {
+        type: String,
+        required: true
+    },
+    age: {
+        type: Number,
+        required: true
+    },
+    colour: {
+        type: String,
+        required: true
+    },
 });
 
 module.exports = mongoose.model('Pets', PetSchema);
