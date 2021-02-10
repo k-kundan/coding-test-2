@@ -2,7 +2,6 @@
 
 const request = require('supertest');
 const chai = require('chai');
-const dbHandler = require('../config/db');
 const chaiAsPromised = require('chai-as-promised');
 
 const app = require('../app');
@@ -12,8 +11,6 @@ chai.use(chaiAsPromised);
 
 
 describe('functional - pet', () => {
-    before(async () => await dbHandler.close() && await dbHandler.connect());
-    after(async () => await dbHandler.close());
 
     it('should fail to create a pet without a name', async () => {
         const res = await request(app).post('/pets/create').send({
@@ -28,18 +25,41 @@ describe('functional - pet', () => {
         const pet = {
             name: 'Caesar',
             age: 2,
-            colour: 'black',
+            colour: 'black'
         };
         const res = await request(app).post('/pets/create').send(pet);
-        console.log(res);
         expect(res.status).to.equal(200);
         expect(res.body.name).to.equal(pet.name);
         expect(res.body.age).to.equal(pet.age);
         expect(res.body.colour).to.equal(pet.colour);
     });
 
+    it('should get a pet', async () => {
+        const pet = {
+            name: 'Caesar',
+            age: 2,
+            colour: 'black'
+        };
+        const res = await request(app).get('/pets/get').query({
+            name: 'Caesar'
+        });
+        expect(res.status).to.equal(201);
+        expect(res.body.name).to.equal(pet.name);
+        expect(res.body.age).to.equal(pet.age);
+        expect(res.body.colour).to.equal(pet.colour);
+    });
+
+    it('should fail to get a pet without a name', async () => {
+        const res = await request(app).get('/pets/get').query({
+            age: 2,
+            colour: 'black'
+        });
+        expect(res.status).to.equal(400);
+        expect(res.body.message).to.equal('"name" is required');
+    });
+
     it('should fail to delete a pet without a name', async () => {
-        const res = await request(app).get('/pets/create').query({
+        const res = await request(app).get('/pets/delete').query({
             age: 2,
             colour: 'black'
         });
@@ -48,27 +68,9 @@ describe('functional - pet', () => {
     });
 
     it('should delete a pet', async () => {
-        const res = await request(app).post('/pets/create').query({name: 'Caesar'});
-        expect(res.status).to.equal(200);
-    });
-
-    it('should fail to get a pet without a name', async () => {
-        const res = await request(app).get('/pets/create').query({
-            age: 2,
-            colour: 'black'
-        });
-        expect(res.status).to.equal(400);
-        expect(res.body.message).to.equal('"name" is required');
-    });
-
-    it('should get a pet', async () => {
-        const pet = {
+        const res = await request(app).get('/pets/delete').query({
             name: 'Caesar'
-        };
-        const res = await request(app).post('/pets/create').query(pet);
+        });
         expect(res.status).to.equal(201);
-        expect(res.body.name).to.equal(pet.name);
-        expect(res.body.age).to.equal(pet.age);
-        expect(res.body.colour).to.equal(pet.colour);
     });
 });

@@ -3,15 +3,11 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
 const app = require('../app');
-const dbHandler = require('../config/db');
 const expect = chai.expect;
 
 chai.use(chaiAsPromised);
 
 describe('functional - user', () => {
-
-  before(async () => await dbHandler.close() && await dbHandler.connect());
-  after(async () => await dbHandler.close());
 
   it('should fail to create a user without a firstName', async () => {
     const res = await request(app).post('/users').send({
